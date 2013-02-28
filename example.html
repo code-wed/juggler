@@ -2,34 +2,15 @@
 
 <html>
     <head>
+        <script src="jquery-1.9.1.min.js"></script>
+        
+        <script src="Ball.js"></script>
+        
         <style>
-@-webkit-keyframes juggle-x-lr {
-      0% { -webkit-transform: translateX(  0px); opacity: 100%; }
-    100% { -webkit-transform: translateX(350px); opacity: 0%; }
-}
-
-@-webkit-keyframes juggle-x-rl {
-      0% { -webkit-transform: translateX(350px); }
-    100% { -webkit-transform: translateX(  0px); }
-}
-
-@-webkit-keyframes juggle-y-lr {
-    
-      0% { -webkit-transform: translateY(   0px); -webkit-animation-timing-function: ease-out; }
-     50% { -webkit-transform: translateY(-350px); -webkit-animation-timing-function: ease-in; }
-    100% { -webkit-transform: translateY(   0px); -webkit-animation-timing-function: ease-out; }
-}
-
-@-webkit-keyframes juggle-y-rl {
-    
-      0% { -webkit-transform: translateY(   0px); -webkit-animation-timing-function: ease-out; }
-     50% { -webkit-transform: translateY(-350px); -webkit-animation-timing-function: ease-in; }
-    100% { -webkit-transform: translateY(   0px); -webkit-animation-timing-function: ease-out; }
-}
-
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 html {
@@ -43,85 +24,70 @@ body {
 
 #scene {
     position: relative;
-    margin: 100px auto;
+    margin: 0 auto;
     width: 400px;
-    height: 400px;
+    height: 600px;
 }
 
-.ball .pos-y {
+.ball {
     position: absolute;
     width: 50px;
     height: 50px;
-    bottom: 0px;
-    background-color: blue;
     border-radius: 25px;
 }
 
-.ball[data-cur-pos="left"] .pos-x {
+#ball-inner {
+    left: 100px;
+    top: 600px;
+    background-color: blue;
+}
+
+#ball-middle {
     left: 0px;
-}
-
-.ball[data-cur-pos="right"] .pos-x {
-    right: 0px;
-}
-
-.ball[data-next-pos="left"] .pos-y {
-    -webkit-animation: juggle-y-rl 1s linear 0s 1 normal;
-}
-
-.ball[data-next-pos="right"] .pos-y {
-    -webkit-animation: juggle-y-lr 1s linear 0s 1 normal;
-}
-    
-.ball[data-next-pos="left"] .pos-x {
-    -webkit-animation: juggle-x-rl 1s linear 0s 1 normal;
-}
-
-.ball[data-next-pos="right"] .pos-x {
-    -webkit-animation: juggle-x-lr 1s linear 0s 1 normal;
+    top: 600px;
+    background-color: red;
 }
         </style>
     </head>
     
     <body>
         <div id="scene">
-            <div id="ball-middle" class="ball">
-                <div class="pos-x">
-                    <div class="pos-y"></div>
-                </div>
-            </div>
+            <div id="ball-inner" class="ball"></div>
+            
+            <div id="ball-middle" class="ball"></div>
         </div>
-    </body>
-    
-    <script>
+        <script>
 (function () {
-    var ballX = document.getElementById('ball-middle');
+    var ballMiddle = new Ball($('#ball-middle'), {
+        left: '0px',
+        right: '300px',
+        base: '600px',
+        apex: '50px',
+        duration: 2400
+    });
     
-    ballX.addEventListener('webkitAnimationEnd', juggleBall)
+    var ballInner = new Ball($('#ball-inner'), {
+        left: '100px',
+        right: '200px',
+        base: '600px',
+        apex: '100px',
+        duration: 1800
+    });
     
-    function juggleBall(event) {
-        var curPos,
-            nextPos;
-        
-        if (event.animationName !== 'juggle-x-lr' && event.animationName !== 'juggle-x-rl') {
-            return;
-        }
-        
-        curPos = this.getAttribute('data-cur-pos');
-        
-        nextPos = this.getAttribute('data-next-pos');
-        
-        this.setAttribute('data-cur-pos', nextPos);
-        
-        setTimeout(function () {
-            this.setAttribute('data-next-pos', curPos);
-        }.bind(this), 0);
+    juggleBall(ballMiddle);
+    
+    setTimeout(function () {
+        juggleBall(ballInner);
+    }, 300);
+    
+    function juggleBall(ball) {
+        ball.juggleLeft().done(function () {
+            ball.juggleRight().done(function () {
+                juggleBall(ball);
+            })
+        });
     }
 }());
-setTimeout(function () {
-    document.getElementById('ball-middle').setAttribute('data-cur-pos', 'left');
-    
-    document.getElementById('ball-middle').setAttribute('data-next-pos', 'right');
-}, 1000);
-    </script>
+        </script>
+    </body>
 </html>

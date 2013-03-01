@@ -2,9 +2,15 @@
 
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="Ball.css" />
+        
+        <link rel="stylesheet" type="text/css" href="Hand.css" />
+        
         <script src="jquery-1.9.1.min.js"></script>
         
         <script src="Ball.js"></script>
+        
+        <script src="Hand.js"></script>
         
         <style>
 * {
@@ -25,27 +31,63 @@ body {
 #scene {
     position: relative;
     margin: 0 auto;
-    width: 400px;
+    width: 350px;
     height: 600px;
 }
 
-.ball {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
+#game-over {
+    display: none;
+    position: relative;
+    margin: 0 auto;
+    width: 250px;
+    text-align: middle;
+    background-color: black;
+    border-radius: 5px;
+    color: white;
+    font-size: 36pt;
+    padding: 0 5px;
+}
+
+#counter {
+    position: relative;
+    margin: 0 auto;
+    max-width: 250px;
+    text-align: right;
+    background-color: black;
+    border-radius: 5px;
+    color: white;
+    font-size: 36pt;
+    padding: 0 5px;
 }
 
 #ball-inner {
     left: 100px;
-    top: 600px;
-    background-color: blue;
+    bottom: 50px;
+    background-color: green;
 }
 
 #ball-middle {
-    left: 0px;
-    top: 600px;
+    left: 50px;
+    bottom: 50px;
+    background-color: blue;
+}
+
+#ball-outer {
+    left: 00px;
+    bottom: 50px;
     background-color: red;
+}
+
+#hand-left {
+    left: 0px;
+    bottom: 40px;
+    background-color: black;
+}
+
+#hand-right {
+    right: 100px;
+    bottom: 40px;
+    background-color: black;
 }
         </style>
     </head>
@@ -55,37 +97,131 @@ body {
             <div id="ball-inner" class="ball"></div>
             
             <div id="ball-middle" class="ball"></div>
+            
+            <div id="ball-outer" class="ball"></div>
+            
+            <div id="hand-left" class="hand"></div>
+            
+            <div id="hand-right" class="hand"></div>
+            
+            <p id="game-over">Game over!</p>
         </div>
+        
+        <p id="counter">0</p>
+        
         <script>
 (function () {
-    var ballMiddle = new Ball($('#ball-middle'), {
+    var balls = [],
+        handLeft,
+        handRight,
+        sceneWidth = $('#scene').width() - 50;
+    
+    handLeft = new Hand($('#hand-left'), {
+        pos: {
+            origin: 'left',
+            min: 0,
+            inc: 50,
+            max: 100
+        },
+        keys: {
+            moveTo: 106,
+            moveFrom: 108
+        }
+    });
+    
+    handRight = new Hand($('#hand-right'), {
+        pos: {
+            origin: 'right',
+            min: 0,
+            inc: 50,
+            max: 100
+        },
+        keys: {
+            moveTo: 108,
+            moveFrom: 106
+        }
+    });
+    
+    balls.push($.extend(true, new Ball($('#ball-outer'), {
         left: '0px',
         right: '300px',
-        base: '600px',
-        apex: '50px',
-        duration: 2400
-    });
+        base: '50px',
+        apex: '550px',
+        duration: 3750
+    }), {
+        delay: 0
+    }));
     
-    var ballInner = new Ball($('#ball-inner'), {
+    balls.push($.extend(true, new Ball($('#ball-middle'), {
+        left: '50px',
+        right: '250px',
+        base: '50px',
+        apex: '370px',
+        duration: 3000
+    }), {
+        delay: 250
+    }));
+    
+    balls.push($.extend(true, new Ball($('#ball-inner'), {
         left: '100px',
         right: '200px',
-        base: '600px',
-        apex: '100px',
-        duration: 1800
+        base: '50px',
+        apex: '230px',
+        duration: 2250
+    }), {
+        delay: 500
+    }));
+    
+    $.each(balls, function (index, ball) {
+        setTimeout(function () {
+            juggleBallToLeft.call(ball);
+        }, ball.delay);
     });
     
-    juggleBall(ballMiddle);
+    function juggleBallToLeft() {
+        this
+            .juggleToLeft()
+            .then(catchOnRight)
+            .done(incrementScore)
+            .done(juggleBallToRight)
+            .fail(gameOver);
+    }
     
-    setTimeout(function () {
-        juggleBall(ballInner);
-    }, 300);
+    function juggleBallToRight() {
+        this
+            .juggleToRight()
+            .then(catchOnLeft)
+            .done(incrementScore)
+            .done(juggleBallToLeft)
+            .fail(gameOver);
+    }
     
-    function juggleBall(ball) {
-        ball.juggleLeft().done(function () {
-            ball.juggleRight().done(function () {
-                juggleBall(ball);
-            })
-        });
+    function catchOnLeft(pos) {
+        if (handLeft.pos === pos) {
+            return $.Deferred().resolveWith(this).promise();
+        } else {
+            return $.Deferred().rejectWith(this).promise();
+        }
+    }
+    
+    function catchOnRight(pos) {
+        if (sceneWidth - handRight.pos === pos) {
+            return $.Deferred().resolveWith(this).promise();
+        } else {
+            return $.Deferred().rejectWith(this).promise();
+        }
+    }
+    
+    function incrementScore() {
+        var score = parseInt($('#counter').text());
+        
+        $('#counter').text(score + 1);
+    }
+    
+    function gameOver() {
+        $.fx.off = true;
+        
+        $('#game-over').show();
     }
 }());
         </script>

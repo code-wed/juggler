@@ -32,21 +32,21 @@ Ball.prototype.juggle = function (options) {
             left: [options.end, 'linear'],
             bottom: [this.options.base, 'easeIn']
         }, this.options.duration / 2, function () {
-            deferred.resolve();
-        })
+            deferred.resolveWith(this, [parseInt(options.end.match(/\d*/)[0])]);
+        }.bind(this))
     }.bind(this));
     
     return deferred.promise();
 };
 
-Ball.prototype.juggleLeft = function () {
+Ball.prototype.juggleToLeft = function () {
     return this.juggle({
         start: this.options.left,
         end: this.options.right
     });
 };
 
-Ball.prototype.juggleRight = function () {
+Ball.prototype.juggleToRight = function () {
     return this.juggle({
         start: this.options.right,
         end: this.options.left

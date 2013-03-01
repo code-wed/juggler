@@ -22,15 +22,15 @@ Ball.prototype.juggle = function (options) {
     
     this.$el
         .css('left', options.start)
-        .css('top', this.options.base);
+        .css('bottom', this.options.base);
     
     this.$el.animate({
         left: [mid, 'linear'],
-        top: [this.options.apex, 'easeOut']
+        bottom: [this.options.apex, 'easeOut']
     }, this.options.duration / 2, function () {
         this.$el.animate({
             left: [options.end, 'linear'],
-            top: [this.options.base, 'easeIn']
+            bottom: [this.options.base, 'easeIn']
         }, this.options.duration / 2, function () {
             deferred.resolve();
         })

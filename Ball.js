@@ -10,6 +10,8 @@ function Ball($el, options) {
     this.$el = $el;
     
     this.options = options;
+    
+    return this;
 }
 
 Ball.prototype.juggle = function (options) {

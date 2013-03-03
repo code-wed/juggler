@@ -16,7 +16,14 @@ function Ball($el, options) {
 
 Ball.prototype.juggle = function (options) {
     var deferred = $.Deferred(),
-        mid;
+        mid,
+        offset;
+    
+    if (!this.startTime) {
+         this.startTime = new Date().valueOf();
+    }
+    
+    offset = new Date().valueOf() - this.startTime;
     
     mid = ((options.start.match(/\d*/) / 2) + (options.end.match(/\d*/) / 2)) + 'px';
     
@@ -27,11 +34,13 @@ Ball.prototype.juggle = function (options) {
     this.$el.animate({
         left: [mid, 'linear'],
         bottom: [this.options.apex, 'easeOut']
-    }, this.options.duration / 2, function () {
+    }, this.options.duration / 2 - offset, function () {
         this.$el.animate({
             left: [options.end, 'linear'],
             bottom: [this.options.base, 'easeIn']
         }, this.options.duration / 2, function () {
+            this.startTime += this.options.duration;
+            
             deferred.resolveWith(this, [parseInt(options.end.match(/\d*/)[0])]);
         }.bind(this))
     }.bind(this));

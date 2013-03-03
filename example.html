@@ -114,7 +114,8 @@ body {
     var balls = [],
         handLeft,
         handRight,
-        sceneWidth = $('#scene').width() - 50;
+        sceneWidth = $('#scene').width() - 50,
+        tickInc = 50;
     
     handLeft = new Hand($('#hand-left'), {
         pos: {
@@ -142,34 +143,34 @@ body {
         }
     });
     
-    balls.push($.extend(true, new Ball($('#ball-outer'), {
+    balls.push(new Ball($('#ball-outer'), {
         left: '0px',
         right: '300px',
         base: '50px',
         apex: '550px',
-        duration: 3750
-    }), {
+        tick: 1000 + tickInc / 90,
+        duration: 5,
         delay: 0
     }));
     
-    balls.push($.extend(true, new Ball($('#ball-middle'), {
+    balls.push(new Ball($('#ball-middle'), {
         left: '50px',
         right: '250px',
         base: '50px',
         apex: '370px',
-        duration: 3000
-    }), {
-        delay: 250
+        tick: 1000 + tickInc / 180,
+        duration: 4,
+        delay: 333
     }));
     
-    balls.push($.extend(true, new Ball($('#ball-inner'), {
+    balls.push(new Ball($('#ball-inner'), {
         left: '100px',
         right: '200px',
         base: '50px',
         apex: '230px',
-        duration: 2250
-    }), {
-        delay: 500
+        tick: 1000,
+        duration: 3,
+        delay: 667
     }));
     
     $.each(balls, function (index, ball) {
@@ -214,6 +215,12 @@ body {
     
     function incrementScore() {
         var score = parseInt($('#counter').text());
+        
+        if (score % 94 === 93) {
+            $.each(balls, function (index, ball) {
+                ball.options.tick -= tickInc;
+            });
+        }
         
         $('#counter').text(score + 1);
     }

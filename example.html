@@ -219,7 +219,9 @@ body {
     }
     
     function gameOver() {
-        $.fx.off = true;
+        $.each(balls, function (index, ball) {
+            ball.$el.stop();
+        });
         
         $('#game-over').show();
     }

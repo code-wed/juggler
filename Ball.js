@@ -50,14 +50,14 @@ Ball.prototype.juggle = function (options) {
 
 Ball.prototype.juggleToLeft = function () {
     return this.juggle({
-        start: this.options.left,
-        end: this.options.right
+        start: this.options.right,
+        end: this.options.left
     });
 };
 
 Ball.prototype.juggleToRight = function () {
     return this.juggle({
-        start: this.options.right,
-        end: this.options.left
+        start: this.options.left,
+        end: this.options.right
     });
 };

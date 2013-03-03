@@ -174,14 +174,14 @@ body {
     
     $.each(balls, function (index, ball) {
         setTimeout(function () {
-            juggleBallToLeft.call(ball);
-        }, ball.delay);
+            juggleBallToRight.call(ball);
+        }, ball.options.delay);
     });
     
     function juggleBallToLeft() {
         this
             .juggleToLeft()
-            .then(catchOnRight)
+            .then(catchOnLeft)
             .done(incrementScore)
             .done(juggleBallToRight)
             .fail(gameOver);
@@ -190,7 +190,7 @@ body {
     function juggleBallToRight() {
         this
             .juggleToRight()
-            .then(catchOnLeft)
+            .then(catchOnRight)
             .done(incrementScore)
             .done(juggleBallToLeft)
             .fail(gameOver);

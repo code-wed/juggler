@@ -49,15 +49,10 @@ body {
 }
 
 #counter {
-    position: relative;
-    margin: 0 auto;
-    max-width: 250px;
-    text-align: right;
-    background-color: black;
-    border-radius: 5px;
-    color: white;
+    position: absolute;
     font-size: 36pt;
-    padding: 0 5px;
+    top: 0;
+    right: 0;
 }
 
 #ball-inner {
@@ -105,9 +100,9 @@ body {
             <div id="hand-right" class="hand"></div>
             
             <p id="game-over">Game over!</p>
+            
+            <p id="counter">0</p>
         </div>
-        
-        <p id="counter">0</p>
         
         <script>
 (function () {

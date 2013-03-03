@@ -34,12 +34,12 @@ Ball.prototype.juggle = function (options) {
     this.$el.animate({
         left: [mid, 'linear'],
         bottom: [this.options.apex, 'easeOut']
-    }, this.options.duration / 2 - offset, function () {
+    }, this.options.tick * (this.options.duration / 2) - offset, function () {
         this.$el.animate({
             left: [options.end, 'linear'],
             bottom: [this.options.base, 'easeIn']
-        }, this.options.duration / 2, function () {
-            this.startTime += this.options.duration;
+        }, this.options.tick * (this.options.duration / 2), function () {
+            this.startTime += this.options.tick * this.options.duration;
             
             deferred.resolveWith(this, [parseInt(options.end.match(/\d*/)[0])]);
         }.bind(this))

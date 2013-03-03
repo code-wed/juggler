@@ -171,7 +171,7 @@ body {
     $.each(balls, function (index, ball) {
         setTimeout(function () {
             juggleBallToRight.call(ball);
-        }, ball.options.delay);
+        }, ball.delay);
     });
     
     function juggleBallToLeft() {
@@ -213,7 +213,7 @@ body {
         
         if (score % 94 === 93) {
             $.each(balls, function (index, ball) {
-                ball.options.tick -= tickInc;
+                ball.tick -= tickInc;
             });
         }
         

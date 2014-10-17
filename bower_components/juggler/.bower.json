@@ -1,0 +1,14 @@
+{
+  "name": "juggler",
+  "homepage": "https://github.com/code-wed/juggler",
+  "_release": "384d2c7aed",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "384d2c7aeddc554e199605a4f0bf89d0a9dabe8e"
+  },
+  "_source": "git://github.com/code-wed/juggler.git",
+  "_target": "*",
+  "_originalSource": "code-wed/juggler",
+  "_direct": true
+}
